@@ -21,7 +21,7 @@ import com.atypon.apithrottling.functional.CircularQueue;
 public class ThrottlingFilter implements Filter {
 
 	private final ReentrantLock lock = new ReentrantLock();
-	private static final int THROTTLING_VALUE_IN_MILLIS = 10000;
+	private static final int THROTTLING_VALUE_IN_MILLIS = 2000;
 	private static final int TIME_IN_MILLIS_LIMIT = 60000;
 	private static final int MAXIMUM_NUMBER_OF_ALLOWED_REQUESTS = 10;
 	private static final String CRITERIA_FOR_THROTTLING_PARAMETER_NAME = "throttling";
@@ -42,7 +42,7 @@ public class ThrottlingFilter implements Filter {
 				LocalDateTime oldestRequestTime = null;
 				lock.lock();
 				try {
-					if(requestsTimeStampsCircularQueue.size() == 10) {
+					if(requestsTimeStampsCircularQueue.size() == MAXIMUM_NUMBER_OF_ALLOWED_REQUESTS) {
 						oldestRequestTime = requestsTimeStampsCircularQueue.deQueue();
 					}
 					requestsTimeStampsCircularQueue.enQueue(LocalDateTime.now());
@@ -52,7 +52,7 @@ public class ThrottlingFilter implements Filter {
 				if(oldestRequestTime != null) {
 					Duration duration = Duration.between(oldestRequestTime, LocalDateTime.now());
 					if(duration.toMillis() <= TIME_IN_MILLIS_LIMIT) {
-						if(numberOfQueuedRequests.getAndIncrement() < 10) {
+						if(numberOfQueuedRequests.getAndIncrement() < MAXIMUM_NUMBER_OF_ALLOWED_REQUESTS) {
 							Thread.sleep(THROTTLING_VALUE_IN_MILLIS);
 							numberOfQueuedRequests.decrementAndGet();
 							chain.doFilter(request,response);
