@@ -52,7 +52,7 @@ public class ThrottlingFilter implements Filter {
 				if(oldestRequestTime != null) {
 					Duration duration = Duration.between(oldestRequestTime, LocalDateTime.now());
 					if(duration.toMillis() <= TIME_IN_MILLIS_LIMIT) {
-						if(numberOfQueuedRequests.getAndIncrement() < MAXIMUM_NUMBER_OF_ALLOWED_REQUESTS) {
+						if(numberOfQueuedRequests.getAndIncrement() <= MAXIMUM_NUMBER_OF_ALLOWED_REQUESTS) {
 							Thread.sleep(THROTTLING_VALUE_IN_MILLIS);
 							numberOfQueuedRequests.decrementAndGet();
 							chain.doFilter(request,response);
