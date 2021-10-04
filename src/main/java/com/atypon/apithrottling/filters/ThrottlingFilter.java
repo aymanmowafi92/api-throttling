@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.atypon.apithrottling.functional.CircularQueue;
 
-@WebFilter(urlPatterns = { "/api-throttling/*"})
 public class ThrottlingFilter implements Filter {
 
 	private final ReentrantLock lock = new ReentrantLock();
