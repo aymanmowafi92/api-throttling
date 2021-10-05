@@ -50,9 +50,9 @@ class ApiThrottlingApplicationTests {
 		}
 		results.forEach(i -> assertEquals(i, Boolean.TRUE));
 		
-		final ExecutorService executorService = Executors.newFixedThreadPool(11);
+		final ExecutorService executorService = Executors.newFixedThreadPool(10);
 		try {
-			for(int counter = 1; counter <= 11; counter++) {
+			for(int counter = 1; counter <= 10; counter++) {
 				executorService.submit(new Runnable() {
 					@Override
 					public void run() {
