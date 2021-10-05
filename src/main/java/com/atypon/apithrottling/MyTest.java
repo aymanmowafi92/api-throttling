@@ -6,23 +6,26 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MyTest {
 
 	public static void main(String[] args) {
-
+		Random rand = new Random();
 		   ExecutorService executorService = Executors.newFixedThreadPool(100);  
-		   for(int count = 0; count < 100; count++) {
-			   if(count > 20) {
+		   for(int count = 0; count < 99; count++) {
+			   if(count >= 1000) {
 				   try {
-					   Thread.sleep(800);
+					    int random = rand.nextInt(100-50) + 50;
+					   Thread.sleep(random);
 				   } catch (InterruptedException e2) {
 					   // TODO Auto-generated catch block
 					   e2.printStackTrace();
 				   }
 			   }
+			   final int ip = count;
 			   executorService.execute(new Runnable() {  
 				   
 				   @Override  
@@ -30,7 +33,7 @@ public class MyTest {
 						/* HttpClient client = new HttpClient */
 					   URL oracle;
 					try {
-						oracle = new URL("http://localhost:8080/api-throttling/service1?throttling");
+						oracle = new URL("http://localhost:8080/api-throttling/service1?ip=" + 1);
 						URLConnection yc = oracle.openConnection();
 				        try(BufferedReader in = new BufferedReader(new InputStreamReader(
 				                                    yc.getInputStream()))) {
